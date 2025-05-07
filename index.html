@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>请输入密文</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+    #inputBox { font-size: 16px; padding: 8px; width: 300px; }
+    #btn { font-size: 16px; padding: 8px 16px; margin-left: 8px; cursor: pointer; }
+    #message { margin-top: 20px; font-size: 16px; color: #007BFF; white-space: pre-wrap; text-align: center; }
+    .info-box {
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-top:15px;
+      border-radius: 5px;
+      font-weight: bold;
+      display: inline-block;
+      text-align: left;
+      word-break: break-all; /* For long strings of garbled text */
+    }
+  </style>
+  </head>
+<body>
+  <h1>请输入密文</h1>
+  <input id="inputBox" placeholder="在此输入任意文本" />
+  <button id="btn">提交处理</button>
+  <div id="message"></div>
+
+  <script>
+    // Predefined set of characters for the "meaningless" output
+    const meaninglessCharSet = "abcdefghijklmnopqrstuvwxyz @!#?$&*";
+    const charSetLength = meaninglessCharSet.length;
+
+    document.getElementById('btn').onclick = function() {
+      const v = document.getElementById('inputBox').value;
+      const msgEl = document.getElementById('message');
+      msgEl.innerHTML = ''; // Clear previous message
+
+      if (!v.trim()) {
+        msgEl.innerHTML = '<div class="info-box" style="color: red;">请输入内容后再提交</div>';
+        return;
+      }
+
+      const trimmedV = v.trim();
+      let outputString = "";
+
+      // 1. Specific phrase mapping
+      if (trimmedV === "清澈的爱只为中国") {
+        outputString = "i love my country";
+      } else {
+        // 2. General input scrambling to produce "meaningless" character string
+        let scrambledChars = [];
+        for (let i = 0; i < trimmedV.length; i++) {
+          const char = trimmedV[i];
+          const originalCode = char.charCodeAt(0);
+          
+          // Derive an index for the meaninglessCharSet.
+          // Adding 'i' (loop index) makes the transformation vary slightly
+          // based on character position.
+          const charIndex = (originalCode + i * 3) % charSetLength; // Simple transformation
+          
+          scrambledChars.push(meaninglessCharSet[charIndex]);
+        }
+        outputString = scrambledChars.join('');
+      }
+      
+      // Display the result
+      msgEl.innerHTML = `<div class="info-box">${outputString}</div>`;
+
+    };
+
+    window.onload = () => {
+      document.getElementById('inputBox').focus();
+    };
+  </script>
+</body>
+</html>
